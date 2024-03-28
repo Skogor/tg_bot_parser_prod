@@ -1,17 +1,18 @@
 from aiogram import Bot, Dispatcher
-from config_data.config import load_config
+from config_data.config import load_config, Config
+import logging
+import asyncio
 
-config = load_config()
+async def main():
+    logging.basicConfig(level=logging.INFO)
 
-bot = Bot(config.tg_bot.token)
-dp = Dispatcher()
+    config: Config = load_config() 
 
-#использование workflow_data диспетчера для прокидывания конф. данных в другие модули
-tkn = config.tg_bot.token
-tel_id = config.tg_bot.id
-tel_hash = config.tg_bot.hash
-tel_session = config.tg_bot.session
+    bot = Bot(config.tg_bot.token)
+    dp = Dispatcher()
 
-dp.workflow_data.update({'my_token': tkn, 'my_id': tel_id, 'my_hash': tel_hash, 'my_session': tel_session})
+    # Пропускаем накопившиеся апдейты и запускаем polling
+    await bot.delete_webhook(drop_pending_updates=True)
+    await dp.start_polling(bot)
 
-print(dp.workflow_data)
+asyncio.run(main())
