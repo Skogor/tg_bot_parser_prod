@@ -12,12 +12,12 @@ class TgBot:
 class Config:
     tg_bot: TgBot
 
-env = Env()
-env.read_env()
+def load_config(path: str | None = None) -> Config:
+    env = Env()
+    env.read_env()
 
-config = Config(tg_bot=TgBot(token=env('BOT_TOKEN'),
-                             id=env('API_ID'),
-                             hash=env('API_HASH'),
-                             session=env('SESSION')))
+    return Config(tg_bot=TgBot(token=env('BOT_TOKEN'),
+                                id=env('API_ID'),
+                                hash=env('API_HASH'),
+                                session=env('SESSION')))
 
-print('BOT_TOKEN - ', config.tg_bot.token)
