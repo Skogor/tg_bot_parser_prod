@@ -1,4 +1,3 @@
-from telethon import TelegramClient
 from aiogram import Bot, Dispatcher
 from config_data.config import load_config, Config
 from keyboards.main_menu import set_main_menu
@@ -15,6 +14,7 @@ async def main():
     bot = Bot(config.tg_bot.token)
     dp = Dispatcher()
     
+    #запуск клиента telegram
     await client.start()
 
     #использование workflow_data диспетчера для прокидывания конф. данных в другие модули (фильтры, роутеры)

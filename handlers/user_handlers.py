@@ -2,16 +2,6 @@ from aiogram import Router, F
 from aiogram.filters import CommandStart, Command
 from aiogram.types import Message
 from services.tg_client import client
-# from telethon.sync import TelegramClient
-# from config_data.config import load_config, Config
-#from filters.filters import filter_megagroup
-
-# config: Config = load_config()
-
-# client = TelegramClient(session=config.tg_bot.session, 
-#                         api_id=config.tg_bot.id, 
-#                         api_hash=config.tg_bot.hash, 
-#                         system_version = '4.16.30-vxCUSTOM')
 
 router = Router()
 
@@ -20,6 +10,7 @@ async def process_start_command(message: Message):
     await message.answer(text='Добро пожаловать! Введите ссылку на чат!')
 
 @router.message(F.text.startswith('https://t.me'))
+@router.message(F.text.startswith('t.me'))
 async def process_beginning_command(message: Message):
     entity = await client.get_entity(message.text)
     if entity.megagroup == False:
