@@ -16,7 +16,7 @@ client = TelegramClient(session=config.tg_bot.session,
 async def filter_megagroup(message: types.Message) -> bool:
     async with client:
         try:
-            entity = await client.get_entity(message.chat.id)
+            entity = await client.get_entity(message.text)
             return entity.megagroup
         except Exception as e:
             print(f"Error checking megagroup: {e}")

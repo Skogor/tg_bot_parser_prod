@@ -3,6 +3,7 @@ from aiogram import Bot, Dispatcher
 from config_data.config import load_config, Config
 from keyboards.main_menu import set_main_menu
 from handlers import user_handlers
+from services.tg_client import client
 import logging
 import asyncio
 
@@ -14,6 +15,7 @@ async def main():
     bot = Bot(config.tg_bot.token)
     dp = Dispatcher()
     
+    await client.start()
 
     #использование workflow_data диспетчера для прокидывания конф. данных в другие модули (фильтры, роутеры)
     tkn = config.tg_bot.token
@@ -34,5 +36,5 @@ async def main():
     await dp.start_polling(bot)
 
     
-
-asyncio.run(main())
+if __name__ == '__main__':
+    asyncio.run(main())
