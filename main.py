@@ -1,21 +1,26 @@
-from aiogram import Bot, Dispatcher
-from config_data.config import load_config, Config
-from keyboards.main_menu import set_main_menu
-from handlers import user_handlers
-from services.tg_client import client
 import logging
 import asyncio
+from aiogram import Bot, Dispatcher
+from config_data.config import load_config, Config
+from config_data.config_queue import config_queue
+from services.tg_client import client
+from keyboards.main_menu import set_main_menu
+from handlers import user_handlers
+
 
 async def main():
     logging.basicConfig(level=logging.INFO)
 
-    config: Config = load_config() 
+    config: Config = load_config()
+
+    #помещаем данные в очередь для прокидывания в TelegramClient
+    config_queue.put((config.tg_bot.id, config.tg_bot.hash, config.tg_bot.session)) 
+
+    #запуск клиента telegram
+    await client.start()
 
     bot = Bot(config.tg_bot.token)
     dp = Dispatcher()
-    
-    #запуск клиента telegram
-    await client.start()
 
     #использование workflow_data диспетчера для прокидывания конф. данных в другие модули (фильтры, роутеры)
     tkn = config.tg_bot.token
@@ -28,10 +33,10 @@ async def main():
     #инициализация menu
     await set_main_menu(bot)
 
-    # Регистрируем роутеры в диспетчере
+    #регистрация роутеров в диспетчере
     dp.include_router(user_handlers.router)
 
-    # Пропускаем накопившиеся апдейты и запускаем polling
+    #пропуск накопившихся апдейтов и запуск polling
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 

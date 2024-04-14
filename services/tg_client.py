@@ -1,9 +1,9 @@
-from telethon import TelegramClient
-from config_data.config import load_config, Config
+from telethon import TelegramClient  #type: ignore
+from config_data.config_queue import config_queue
+ 
+id, hash, session = config_queue.get()
 
-config: Config = load_config()
-
-client = TelegramClient(session=config.tg_bot.session, 
-                        api_id=config.tg_bot.id, 
-                        api_hash=config.tg_bot.hash, 
+client = TelegramClient(session=session, 
+                        api_id=id, 
+                        api_hash=hash, 
                         system_version = '4.16.30-vxCUSTOM')
